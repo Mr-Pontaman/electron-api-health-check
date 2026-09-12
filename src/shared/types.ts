@@ -77,6 +77,17 @@ export type VaultStatus = {
 	unlocked: boolean;
 };
 
+/**
+ * バックアップファイルを選択した直後に返す概要。
+ * 実際に復元する前に、選んだファイルが何かをユーザーへ示すために使う。
+ * 暗号文は含めない。
+ */
+export type VaultBackupSummary = {
+	exportedAt: string;
+	appVersion: string;
+	targetCount: number;
+};
+
 /** preload が contextBridge で公開する API の形。実装は src/preload/index.ts */
 export type PontaPingApi = {
 	getVaultStatus: () => Promise<VaultStatus>;
@@ -87,6 +98,13 @@ export type PontaPingApi = {
 		currentPassword: string,
 		newPassword: string,
 	) => Promise<IpcResult<null>>;
+	resetVault: (masterPassword: string) => Promise<IpcResult<null>>;
+
+	/** ファイル選択がキャンセルされた場合は data: null */
+	exportVault: () => Promise<IpcResult<{ filePath: string } | null>>;
+	/** ファイル選択がキャンセルされた場合は data: null */
+	selectVaultBackup: () => Promise<IpcResult<VaultBackupSummary | null>>;
+	restoreVault: (masterPassword: string) => Promise<IpcResult<null>>;
 
 	getApiTargets: () => Promise<ApiTargetDto[]>;
 	createApiTarget: (

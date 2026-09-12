@@ -37,6 +37,54 @@ export const masterPasswordSchema = z
 	.string()
 	.min(12, "マスターパスワードは12文字以上で設定してください");
 
+/** バックアップ JSON の識別子と、このアプリが読める形式の版 */
+export const VAULT_BACKUP_FORMAT = "ponta-ping-vault";
+export const VAULT_BACKUP_SCHEMA_VERSION = 1;
+
+/**
+ * バックアップに含まれるターゲット1件。
+ *
+ * 登録時と違い、ここでは URL を http/https に限定しない。
+ * バックアップは自分自身が書き出したものなので、検証を通すために
+ * 過去のデータを弾いてしまうほうが害が大きい。
+ */
+export const vaultBackupTargetSchema = z.object({
+	id: z.string().min(1),
+	name: z.string(),
+	url: z.string(),
+	method: httpMethodSchema,
+	authType: authTypeSchema,
+	credentialKey: z.string().nullable(),
+	encryptedValue: z.string().nullable(),
+	iv: z.string().nullable(),
+	createdAt: z.string().min(1),
+	updatedAt: z.string().min(1),
+});
+
+/**
+ * バックアップ JSON の構造。
+ *
+ * format と schemaVersion はあえて緩く受ける。z.literal にすると
+ * 「新しい版で作られたファイル」を弾いたときのメッセージが
+ * フィールド名だけの不親切なものになるため、判定は呼び出し側で行う。
+ */
+export const vaultBackupSchema = z.object({
+	format: z.string(),
+	schemaVersion: z.number().int(),
+	appVersion: z.string(),
+	exportedAt: z.string().min(1),
+	/** 書き出し時点で適用済みだったマイグレーション名 */
+	migrations: z.array(z.string()),
+	settings: z.object({
+		"vault.salt": z.string().min(1),
+		"vault.verifier": z.string().min(1),
+		"vault.verifierIv": z.string().min(1),
+	}),
+	targets: z.array(vaultBackupTargetSchema),
+});
+
+export type VaultBackup = z.infer<typeof vaultBackupSchema>;
+
 export const createApiTargetSchema = z.object({
 	name: nameSchema,
 	url: urlSchema,

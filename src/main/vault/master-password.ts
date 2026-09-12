@@ -5,15 +5,14 @@ import {
 	deriveMasterKey,
 	encryptWithKey,
 } from "./crypto";
-
-const SETTING_SALT = "vault.salt";
-const SETTING_VERIFIER = "vault.verifier";
-const SETTING_VERIFIER_IV = "vault.verifierIv";
-
-/**
- * 解錠の判定に使う既知の文字列
- */
-const VERIFIER_PLAINTEXT = "ponta-ping-vault-verifier-v1";
+import {
+	readSetting,
+	SETTING_SALT,
+	SETTING_VERIFIER,
+	SETTING_VERIFIER_IV,
+	upsertSetting,
+	VERIFIER_PLAINTEXT,
+} from "./settings";
 
 let unlockedKey: CryptoKey | null = null;
 
@@ -25,17 +24,6 @@ export const requireUnlockedKey = (): CryptoKey => {
 	}
 	return unlockedKey;
 };
-
-const readSetting = async (key: string): Promise<string | null> => {
-	const row = await getPrisma().appSetting.findUnique({ where: { key } });
-	return row?.value ?? null;
-};
-
-const upsertSetting = (key: string, value: string) => ({
-	where: { key },
-	create: { key, value },
-	update: { value },
-});
 
 export const isMasterPasswordInitialized = async (): Promise<boolean> =>
 	(await readSetting(SETTING_SALT)) !== null;

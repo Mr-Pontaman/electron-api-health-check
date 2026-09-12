@@ -24,6 +24,16 @@ const api: PontaPingApi = {
 			newPassword,
 		),
 
+	resetVault: (masterPassword) =>
+		ipcRenderer.invoke(IPC_CHANNELS.RESET_VAULT, masterPassword),
+
+	exportVault: () => ipcRenderer.invoke(IPC_CHANNELS.EXPORT_VAULT),
+
+	selectVaultBackup: () => ipcRenderer.invoke(IPC_CHANNELS.SELECT_VAULT_BACKUP),
+
+	restoreVault: (masterPassword) =>
+		ipcRenderer.invoke(IPC_CHANNELS.RESTORE_VAULT, masterPassword),
+
 	getApiTargets: () => ipcRenderer.invoke(IPC_CHANNELS.GET_API_TARGETS),
 
 	createApiTarget: (input) =>

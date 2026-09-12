@@ -1,6 +1,6 @@
 {
   "name": "ponta-ping",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "API エンドポイントのヘルスチェックツール",
   "author": "Mr-Pontaman",
   "license": "MIT",

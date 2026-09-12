@@ -1,4 +1,7 @@
-# Electron 構成メモ
+## TODO
+
+- PCの初期化・移行への対応
+  -> keypassXCみたいなパターン?
 
 ## 3 つのプロセス
 
@@ -17,10 +20,3 @@ Next.js で言うなら renderer = コンポーネント、preload = 通信レ�
 想定内の失敗（パスワード違い、対象なし等）は例外ではなく
 `IpcResult<T>`（`{ ok: false, error: "日本語メッセージ" }`）で返す。
 例外にすると Electron がメッセージを包んでしまい、そのまま UI に出せないため。
-
-## ネイティブモジュール
-
-`better-sqlite3` は `@prisma/adapter-better-sqlite3` の依存として入る。
-ASAR 内からは読み込めないため `electron-builder.config.ts` の `asarUnpack` に
-`**/*.node` を指定している。`prisma/migrations/**` も実行時に読むので同様に展開する。
-

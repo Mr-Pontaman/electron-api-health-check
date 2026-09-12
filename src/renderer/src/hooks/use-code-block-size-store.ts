@@ -9,9 +9,9 @@ type CodeBlockState = {
 export const useCodeBlockStore = create<CodeBlockState>()(
 	persist(
 		(set) => ({
-			height: 200, // 初期高さ (px)
+			height: 200, // 初期の高さ (px)
 			setHeight: (height) =>
-				set({ height: Math.max(100, Math.min(800, height)) }), // 100px〜800pxの範囲制限
+				set({ height: Math.max(100, Math.min(800, height)) }),
 		}),
 		{
 			name: "response-body-height-storage",
