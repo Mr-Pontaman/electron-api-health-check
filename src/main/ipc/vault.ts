@@ -2,6 +2,7 @@ import { IPC_CHANNELS } from "@shared/ipc-channels";
 import type { IpcResult, VaultStatus } from "@shared/types";
 import { masterPasswordSchema } from "@shared/validation";
 import { ipcMain } from "electron";
+import { resetVault } from "../vault/backup";
 import {
 	changeMasterPassword,
 	isMasterPasswordInitialized,
@@ -71,6 +72,10 @@ export const registerVaultHandlers = (): void => {
 		lock();
 		return getVaultStatus();
 	});
+
+	ipcMain.handle(IPC_CHANNELS.RESET_VAULT, (_event, masterPassword: unknown) =>
+		handleWithMasterPassword(masterPassword, resetVault),
+	);
 
 	ipcMain.handle(
 		IPC_CHANNELS.CHANGE_MASTER_PASSWORD,

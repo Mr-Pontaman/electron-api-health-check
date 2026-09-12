@@ -4,6 +4,7 @@ import icon from "../../resources/icon.png?asset";
 import { closePrisma } from "./db/client";
 import { applyMigrations } from "./db/migrate";
 import { registerApiTargetHandlers } from "./ipc/api-target";
+import { registerBackupHandlers } from "./ipc/backup";
 import { registerHealthCheckHandlers } from "./ipc/health-check";
 import { registerVaultHandlers } from "./ipc/vault";
 
@@ -55,6 +56,7 @@ app.whenReady().then(() => {
 	applyMigrations();
 
 	registerVaultHandlers();
+	registerBackupHandlers();
 	registerApiTargetHandlers();
 	registerHealthCheckHandlers();
 

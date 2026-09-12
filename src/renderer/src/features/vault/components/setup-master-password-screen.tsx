@@ -3,16 +3,21 @@ import { Input } from "@renderer/components/ui/input";
 import { Label } from "@renderer/components/ui/label";
 import { masterPasswordSchema } from "@shared/validation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Info } from "lucide-react";
+import { FileUp, Info } from "lucide-react";
 import { useState } from "react";
 import { vaultStatusQueryKey } from "../query-keys";
+import { RestoreVaultPanel } from "./restore-vault-panel";
 import { VaultScreenLayout } from "./vault-screen-layout";
 
 /**
- * 初回起動時のマスターパスワード設定。
+ * 初回起動時と、初期化した直後。
+ * マスターパスワードを新しく決めるか、書き出しておいたバックアップから
+ * 復元するかを選ぶ。
+ *
  * このパスワードから API キーの暗号鍵を導出するため、忘れると復旧できない。
  */
 export const SetupMasterPasswordScreen = () => {
+	const [mode, setMode] = useState<"setup" | "restore">("setup");
 	const [masterPassword, setMasterPassword] = useState("");
 	const [confirmation, setConfirmation] = useState("");
 	const queryClient = useQueryClient();
@@ -36,6 +41,17 @@ export const SetupMasterPasswordScreen = () => {
 			await queryClient.invalidateQueries({ queryKey: vaultStatusQueryKey });
 		},
 	});
+
+	if (mode === "restore") {
+		return (
+			<VaultScreenLayout
+				title="バックアップから復元"
+				description="書き出しておいたバックアップファイルを読み込みます。"
+			>
+				<RestoreVaultPanel onCancel={() => setMode("setup")} />
+			</VaultScreenLayout>
+		);
+	}
 
 	return (
 		<VaultScreenLayout
@@ -98,6 +114,25 @@ export const SetupMasterPasswordScreen = () => {
 					{setupMutation.isPending ? "設定中..." : "設定して開始"}
 				</Button>
 			</form>
+
+			<div className="relative my-5">
+				<div className="absolute inset-0 flex items-center">
+					<span className="w-full border-t" />
+				</div>
+				<div className="relative flex justify-center text-xs">
+					<span className="bg-card px-2 text-muted-foreground">または</span>
+				</div>
+			</div>
+
+			<Button
+				type="button"
+				variant="outline"
+				className="w-full"
+				onClick={() => setMode("restore")}
+			>
+				<FileUp className="h-4 w-4" />
+				バックアップから復元する
+			</Button>
 		</VaultScreenLayout>
 	);
 };

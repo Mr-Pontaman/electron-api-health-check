@@ -26,6 +26,8 @@ apps:
     command: ponta-ping --no-sandbox
     plugs:
       - browser-support
+      # バックアップの書き出し・読み込みで任意の場所を選べるようにする
+      - home
     desktop: meta/gui/ponta-ping.desktop
     extensions:
       - gnome
