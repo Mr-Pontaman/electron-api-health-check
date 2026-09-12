@@ -1,4 +1,4 @@
-name: ponta-ping
+name: api-health-check
 base: core24
 confinement: strict
 grade: stable

@@ -103,6 +103,14 @@ jobs:
           path: ${{ steps.snapcraft.outputs.snap }}
           if-no-files-found: error
 
+      - name: Publish to Snap Store
+        uses: snapcore/action-publish@v1
+        env:
+          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
+        with:
+          snap: ${{ steps.snapcraft.outputs.snap }}
+          release: edge
+
   release:
     needs: [build, snap]
     runs-on: ubuntu-latest
