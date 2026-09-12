@@ -21,7 +21,7 @@
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:studio": "prisma studio",
-    "postinstall": "electron-builder install-app-deps",
+    "postinstall": "prisma generate && electron-builder install-app-deps",
     "rebuild": "electron-builder install-app-deps",
     "build:unpack": "npm run build && electron-builder --dir --config electron-builder.config.ts",
     "build:linux": "npm run build && electron-builder --linux --config electron-builder.config.ts",
