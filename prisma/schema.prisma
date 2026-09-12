@@ -1,0 +1,54 @@
+generator client {
+  provider = "prisma-client"
+  output   = "./generated/prisma"
+  runtime  = "nodejs"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model ApiTarget {
+  id String @id @default(cuid())
+
+  name   String
+  url    String
+  method HttpMethod @default(GET)
+
+  authType AuthType @default(NONE)
+
+  // ヘッダー名（x-api-key, Authorization など）。
+  // authType が QUERY のときはクエリパラメータ名（apikey など）として使う。
+  credentialKey String?
+
+  encryptedValue String? // マスターパスワード由来の鍵で暗号化した API Key / Token（Base64）
+  iv             String? // AES-GCM の初期化ベクトル（Base64）
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("api_target")
+}
+
+/// マスターパスワードの検証用ブロブと PBKDF2 の salt を保持する。
+model AppSetting {
+  key   String @id
+  value String
+
+  @@map("app_setting")
+}
+
+enum AuthType {
+  NONE // 認証なし
+  API_KEY // x-api-key: {VALUE}
+  BEARER // Authorization: Bearer {VALUE}
+  CUSTOM // 自作ヘッダーキー: {VALUE}
+  QUERY // ?apikey={VALUE} のようなクエリパラメータ
+}
+
+enum HttpMethod {
+  GET
+  POST
+  PUT
+  DELETE
+}

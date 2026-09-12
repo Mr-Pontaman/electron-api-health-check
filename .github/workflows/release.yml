@@ -1,0 +1,141 @@
+name: Release App
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "src/**"
+      - "prisma/**"
+      - "package.json"
+      - "electron-builder.config.ts"
+      - ".github/workflows/**"
+      - "snap/**"
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build app
+        run: pnpm run build
+
+      - name: Package Windows
+        if: runner.os == 'Windows'
+        run: pnpm exec electron-builder --win --config electron-builder.config.ts --publish never
+
+      - name: Package Linux
+        if: runner.os == 'Linux'
+        run: pnpm exec electron-builder --linux --config electron-builder.config.ts --publish never
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifacts-${{ matrix.os }}
+          path: |
+            dist/*.exe
+            dist/*.AppImage
+            dist/*.deb
+          if-no-files-found: error
+
+  snap:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build app
+        run: pnpm run build
+
+      - name: Build unpacked Linux app
+        run: pnpm exec electron-builder --dir --config electron-builder.config.ts
+
+      - name: Sync snap version from package.json
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          sed -i "s/^version:.*/version: '${VERSION}'/" snap/snapcraft.yaml
+
+      - name: Build snap
+        id: snapcraft
+        uses: snapcore/action-build@v1
+
+      - name: Upload snap artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifacts-snap
+          path: ${{ steps.snapcraft.outputs.snap }}
+          if-no-files-found: error
+
+  release:
+    needs: [build, snap]
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: all-artifacts
+          merge-multiple: true
+
+      - name: Delete old continuous release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        continue-on-error: true
+        run: |
+          gh release delete continuous --yes 2>/dev/null || true
+          git push --delete origin continuous 2>/dev/null || true
+
+      - name: Create Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          files=(all-artifacts/*)
+
+          gh release create "continuous" \
+            --title "App Latest (Continuous)" \
+            --notes "" \
+            "${files[@]}" \
+            --target "${{ github.sha }}"

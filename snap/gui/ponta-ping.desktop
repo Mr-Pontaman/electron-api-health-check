@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Ponta Ping
+Exec=ponta-ping %U
+Terminal=false
+Type=Application
+Icon=${SNAP}/meta/gui/ponta-ping.png
+StartupWMClass=ponta-ping
+Comment=API エンドポイントのヘルスチェックツール
+Categories=Utility;

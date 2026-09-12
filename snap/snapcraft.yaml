@@ -1,0 +1,31 @@
+name: ponta-ping
+base: core24
+confinement: strict
+grade: stable
+# version は CI が package.json から同期する
+version: "1.0.0"
+summary: Ponta Ping
+description: |
+  API エンドポイントのヘルスチェックツール
+
+  登録した URL に Ping を送り、ステータスコードと応答時間を確認する、
+  API キーはマスターパスワードから導出した鍵で暗号化して端末内に保存
+
+icon: snap/gui/ponta-ping.png
+
+environment:
+  TMPDIR: $XDG_RUNTIME_DIR
+
+parts:
+  ponta-ping:
+    plugin: dump
+    source: dist/linux-unpacked
+
+apps:
+  ponta-ping:
+    command: ponta-ping --no-sandbox
+    plugs:
+      - browser-support
+    desktop: meta/gui/ponta-ping.desktop
+    extensions:
+      - gnome

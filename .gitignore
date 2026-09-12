@@ -1,0 +1,42 @@
+node_modules
+.DS_Store
+dist
+out
+*.local
+__unconfig*
+todos.json
+
+# env files (can opt-in for committing if needed)
+.env
+.env.local
+.env*.local
+
+# prisma
+prisma/generated/prisma
+dev.db
+dev.db-journal
+
+# ビルド成果物
+*.AppImage
+*.deb
+*.snap
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Tooling / Cache
+.eslintcache
+.tsbuild
+*.tsbuildinfo
+*.log*
+
+# Agent / Personal tooling
+.deepseek
+.codewhale
+
+# Git
+.git
