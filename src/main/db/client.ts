@@ -9,6 +9,7 @@ const DATABASE_FILE_NAME = "api-health-check.db";
  * DB はユーザーの userData 配下に置く。
  * app.getPath は app ready 前だと例外になるため、呼び出しは遅延させる。
  */
+
 export const getDatabasePath = (): string =>
 	join(app.getPath("userData"), DATABASE_FILE_NAME);
 
