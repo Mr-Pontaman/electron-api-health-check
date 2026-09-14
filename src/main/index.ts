@@ -8,6 +8,24 @@ import { registerBackupHandlers } from "./ipc/backup";
 import { registerHealthCheckHandlers } from "./ipc/health-check";
 import { registerVaultHandlers } from "./ipc/vault";
 
+const registerDevToolsShortcut = (window: BrowserWindow): void => {
+	window.webContents.on("before-input-event", (event, input) => {
+		if (input.type !== "keyDown" || input.isAutoRepeat) return;
+
+		const isF12 = input.key === "F12";
+		const isToggle =
+			input.control && input.shift && input.key.toLowerCase() === "i";
+		if (!isF12 && !isToggle) return;
+
+		event.preventDefault();
+		if (window.webContents.isDevToolsOpened()) {
+			window.webContents.closeDevTools();
+		} else {
+			window.webContents.openDevTools({ mode: "detach" });
+		}
+	});
+};
+
 const createWindow = (): void => {
 	const mainWindow = new BrowserWindow({
 		width: 1180,
@@ -45,6 +63,9 @@ const createWindow = (): void => {
 	);
 
 	const rendererUrl = process.env.ELECTRON_RENDERER_URL;
+	if (!app.isPackaged) {
+		registerDevToolsShortcut(mainWindow);
+	}
 	if (!app.isPackaged && rendererUrl) {
 		void mainWindow.loadURL(rendererUrl);
 	} else {

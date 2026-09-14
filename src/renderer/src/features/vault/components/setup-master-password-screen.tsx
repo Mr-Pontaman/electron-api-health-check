@@ -13,7 +13,6 @@ import { VaultScreenLayout } from "./vault-screen-layout";
  * 初回起動時と、初期化した直後。
  * マスターパスワードを新しく決めるか、書き出しておいたバックアップから
  * 復元するかを選ぶ。
- *
  * このパスワードから API キーの暗号鍵を導出するため、忘れると復旧できない。
  */
 export const SetupMasterPasswordScreen = () => {
