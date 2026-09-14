@@ -34,7 +34,7 @@ API キーはマスターパスワードから導出した鍵で暗号化して�
 - Snap
 
 ```
-
+sudo snap install api-health-check
 ```
 
 - [Snap Store](https://snapcraft.io/api-health-check)
