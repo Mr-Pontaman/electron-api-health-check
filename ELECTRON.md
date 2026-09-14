@@ -1,7 +1,9 @@
-## TODO
+## Snapcraft - TODO?
 
-- PCの初期化・移行への対応
-  -> keypassXCみたいなパターン?
+`snapcraft.yaml`の内容は`electron-builder.config`の`snapcraft`プロパティに移行可能。
+次回 Electronでデスクトップアプリを作る場合はそうする。
+
+---
 
 ## 3 つのプロセス
 
