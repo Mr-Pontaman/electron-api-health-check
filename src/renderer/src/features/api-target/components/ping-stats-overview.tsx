@@ -33,7 +33,7 @@ const StatCard = ({ icon, label, value, tone }: StatCardProps) => {
 	return (
 		<div
 			className={cn(
-				"flex items-center space-x-1.5 sm:space-x-3 rounded-lg p-3",
+				"flex items-center space-x-1.5 rounded-lg p-3 sm:space-x-3",
 				TONES[tone],
 			)}
 		>

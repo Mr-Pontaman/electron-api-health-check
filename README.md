@@ -24,18 +24,19 @@ API キーはマスターパスワードから導出した鍵で暗号化して�
 
 # インストール
 
+- `snap`はUbuntu24、`.exe`はWindows11で動作確認済み
+
 ## Linux
 
 - `.deb` , `AppImage`
   - [Releases](https://github.com/Mr-Pontaman/electron-api-health-check/releases) Page
 
-```
-// install .dev
-
-sudo apt install ./***.deb
-```
-
 - Snap
+
+```
+
+```
+
 - [Snap Store](https://snapcraft.io/api-health-check)
 
 ### Windows

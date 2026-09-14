@@ -58,27 +58,27 @@ export const ApiTargetList = ({ apiTargets }: Props) => {
 
 	return (
 		<div className="space-y-6">
-				<CollapsibleFormPanel
-					icon={<ChartNoAxesCombined className="size-5 text-primary" />}
-					title="Ping結果"
-					isOpen={isOpen}
-					onOpenChange={setIsOpen}
-				>
-					<PingStatsOverview apiTargets={apiTargets} />
-					<div className="flex justify-end">
-						<Button
-							type="button"
-							onClick={() => batchPingMutation.mutate()}
-							disabled={batchPingMutation.isPending}
-							className="w-full gap-2 sm:w-auto"
-						>
-							<Zap className="size-4 text-amber-600" />
-							{batchPingMutation.isPending
-								? "一括送信中..."
-								: "全ターゲット一括Ping実行"}
-						</Button>
-					</div>
-				</CollapsibleFormPanel>
+			<CollapsibleFormPanel
+				icon={<ChartNoAxesCombined className="size-5 text-primary" />}
+				title="Ping結果"
+				isOpen={isOpen}
+				onOpenChange={setIsOpen}
+			>
+				<PingStatsOverview apiTargets={apiTargets} />
+				<div className="flex justify-end">
+					<Button
+						type="button"
+						onClick={() => batchPingMutation.mutate()}
+						disabled={batchPingMutation.isPending}
+						className="w-full gap-2 sm:w-auto"
+					>
+						<Zap className="size-4 text-amber-600" />
+						{batchPingMutation.isPending
+							? "一括送信中..."
+							: "全ターゲット一括Ping実行"}
+					</Button>
+				</div>
+			</CollapsibleFormPanel>
 			<ApiTargetTable apiTargets={apiTargets} />
 		</div>
 	);

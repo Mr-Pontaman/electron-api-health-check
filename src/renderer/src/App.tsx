@@ -17,7 +17,6 @@ export const App = () => {
 			</div>
 		);
 	}
-
 	if (!vaultStatus.initialized) {
 		return <SetupMasterPasswordScreen />;
 	}

@@ -16,7 +16,7 @@ export const DashboardPage = () => {
 		<div
 			className={cn(
 				fullWidth ? "w-full" : "container",
-				"mx-auto space-y-1 px-4 xl:px-14 py-6",
+				"mx-auto space-y-1 px-4 py-6 xl:px-14",
 			)}
 		>
 			<DashboardHeader />
@@ -26,7 +26,7 @@ export const DashboardPage = () => {
 				</Button>
 			</div>
 			<main className="grid grid-cols-1 items-start gap-6">
-				<div className="grid grid-cols-1 gap-y-4 sm:grid-cols-2 gap-x-4 sm:gap-x-10 xl:gap-x-14">
+				<div className="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2 sm:gap-x-10 xl:gap-x-14">
 					<CreateApiTargetForm />
 					<PingTest title="クイック Ping テスト" />
 				</div>

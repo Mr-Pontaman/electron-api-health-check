@@ -24,6 +24,8 @@ parts:
 apps:
   ponta-ping:
     command: ponta-ping --no-sandbox
+    aliases:
+      - ponta-ping
     plugs:
       - browser-support
       # バックアップの書き出し・読み込みで任意の場所を選べるようにする
